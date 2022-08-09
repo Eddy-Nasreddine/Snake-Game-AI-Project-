@@ -14,3 +14,11 @@ while running:
             running = False
     screen.fill((0, 0, 0))
     pygame.display.update()
+
+class Game:
+    def __init__(self, screen):
+        pass
+
+class Snake:
+    def __init__(self, length):
+        self.length = 1
