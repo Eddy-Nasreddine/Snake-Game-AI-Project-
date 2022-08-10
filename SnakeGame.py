@@ -24,6 +24,7 @@ def main():
         pass
 
 
+<<<<<<< HEAD
     
 class Game:
     def __init__(self, screen):
@@ -51,3 +52,19 @@ class Snake:
         pass
 
 main()
+=======
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+    screen.fill((0, 0, 0))
+    pygame.display.update()
+
+class Game:
+    def __init__(self, screen):
+        pass
+
+class Snake:
+    def __init__(self, length):
+        self.length = 1
+>>>>>>> 584808c70899526a86921110a1b35473eb102709
