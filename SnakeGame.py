@@ -1,47 +1,65 @@
 import pygame
 import random
-
+import time
 def main():
     background_colour = (255, 0, 0)
-    screen = pygame.display.set_mode((1000, 1000))
-    pygame.display.set_caption('Snake Game')
+    screen = pygame.display.set_mode((995, 995))
+    pygame.display.set_caption('')
     pygame.display.flip()
     running = True
-    background_image = pygame.image.load('grid.png').convert()
+    background_image = pygame.image.load('995 grid.png').convert()
+    x = random.randint(0, 1000)
+    y = random.randint(0, 1000)
+    snakey = Snake(screen)
+    x_pos = 500
+    y_pos = 500
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        screen.fill((0, 0, 0))
-        pygame.screen.blit(background_image,(0,0))
-        a = pygame.Rect(500,500,50,50)
-        a.center = (500,500)
-        pygame.draw.rect(screen,(255,255,255),a)
-        
-        #rectangle = Rectangle(screen,50)
-        #rectangle.draw_rectangle(50)
-        pygame.display.update()
+        screen.blit(background_image,(0,0))
+        #snakey.Food(x,y)
+
+
+        snakey.draw_snake(x_pos, y_pos)
+        userinput = pygame.key.get_pressed()
+        print(x_pos, ":",y_pos)
+        if userinput[pygame.K_w]:
+            #while True:
+            y_pos -= 5
+                # if (userinput[pygame.K_a] or userinput[pygame.K_d]):
+                #     break\
+            print("w")
+        elif userinput[pygame.K_s]:
+            #while True:
+            y_pos += 5
+                # if (userinput[pygame.K_d] or userinput[pygame.K_a]):
+                #     break
+            print("s")
+        elif userinput[pygame.K_a]:
+            #while True:
+            x_pos -= 5
+                # if (userinput[pygame.K_w] or userinput[pygame.K_s]):
+                #     break
+            print("a")
+        elif userinput[pygame.K_d]:
+            # while True:
+            x_pos += 5
+            print("d")
+                # if (userinput[pygame.K_w] or userinput[pygame.K_s]):
+                #     break
+
+        pygame.time.Clock().tick(60)
+        pygame.display.flip()
         pass
 
 
-<<<<<<< HEAD
-    
-class Game:
+class Snake:
     def __init__(self, screen):
         self.screen = screen
-
-
-class Rectangle:
-    def __init__(self,screen,length):
-        self.length = length
-    def draw_rectangle(length):
-        pygame.draw.rect(screen,(255,255,255),length)
-
-
-class Snake:
-    def __init__(self, length,food):
-        self.length = 2  
-        self.food = 1
+    def draw_snake(self, x_pos, y_pos):
+        a = pygame.Rect(x_pos, y_pos, 50, 50)
+        pygame.draw.rect(self.screen, (255, 255, 255), a)
     def increase(length):
         #if snake eat food:
            #then increase length by 1
@@ -50,21 +68,11 @@ class Snake:
         #if snake hits out of bounds or snake hits itself:
             #game over
         pass
+    def Food(x_pos ,y_pos):
+
+        food = pygame.Rect(x_pos, y_pos, 50, 50)
+        pygame.draw.rect(self.screen, (255, 0, 0), food)
+
 
 main()
-=======
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-    screen.fill((0, 0, 0))
-    pygame.display.update()
 
-class Game:
-    def __init__(self, screen):
-        pass
-
-class Snake:
-    def __init__(self, length):
-        self.length = 1
->>>>>>> 584808c70899526a86921110a1b35473eb102709
