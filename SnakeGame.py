@@ -24,6 +24,7 @@ def main():
 
         x_pos += x_velocity
         y_pos += y_velocity
+
         snakey.draw_snake(x_pos, y_pos)
         userinput = pygame.key.get_pressed()
         print(x_pos, ":",y_pos)
@@ -42,7 +43,6 @@ def main():
         elif userinput[pygame.K_d]:
             x_velocity = 55
             y_velocity = 0
-
 
 
         pygame.time.Clock().tick(10)
@@ -68,6 +68,9 @@ class Snake:
 
         food = pygame.Rect(x_pos, y_pos, 50, 50)
         pygame.draw.rect(self.screen, (255, 0, 0), food)
+
+    def postion_check(self, direction):
+        pass
 
 
 main()
