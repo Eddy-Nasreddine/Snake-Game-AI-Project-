@@ -13,6 +13,8 @@ def main():
     snakey = Snake(screen)
     x_pos = 500
     y_pos = 500
+    x_velocity = 0
+    y_velocity = 0
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -20,36 +22,30 @@ def main():
         screen.blit(background_image,(0,0))
         #snakey.Food(x,y)
 
-
+        x_pos += x_velocity
+        y_pos += y_velocity
         snakey.draw_snake(x_pos, y_pos)
         userinput = pygame.key.get_pressed()
         print(x_pos, ":",y_pos)
         if userinput[pygame.K_w]:
-            #while True:
-            y_pos -= 5
-                # if (userinput[pygame.K_a] or userinput[pygame.K_d]):
-                #     break\
-            print("w")
-        elif userinput[pygame.K_s]:
-            #while True:
-            y_pos += 5
-                # if (userinput[pygame.K_d] or userinput[pygame.K_a]):
-                #     break
-            print("s")
-        elif userinput[pygame.K_a]:
-            #while True:
-            x_pos -= 5
-                # if (userinput[pygame.K_w] or userinput[pygame.K_s]):
-                #     break
-            print("a")
-        elif userinput[pygame.K_d]:
-            # while True:
-            x_pos += 5
-            print("d")
-                # if (userinput[pygame.K_w] or userinput[pygame.K_s]):
-                #     break
+            y_velocity = -55
+            x_velocity = 0
 
-        pygame.time.Clock().tick(60)
+        elif userinput[pygame.K_s]:
+            y_velocity = 55
+            x_velocity = 0
+
+        elif userinput[pygame.K_a]:
+            x_velocity = -55
+            y_velocity = 0
+
+        elif userinput[pygame.K_d]:
+            x_velocity = 55
+            y_velocity = 0
+
+
+
+        pygame.time.Clock().tick(10)
         pygame.display.flip()
         pass
 
