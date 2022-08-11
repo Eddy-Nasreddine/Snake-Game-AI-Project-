@@ -142,13 +142,13 @@ class Snake:
 def get_userinput():
 	userinput = pygame.key.get_pressed()
 		
-	if userinput[pygame.K_w]:
+	if userinput[pygame.K_w] or userinput[pygame.K_UP]:
 		return 'up'
-	elif userinput[pygame.K_s]:
+	elif userinput[pygame.K_s] or userinput[pygame.K_DOWN]:
 		return 'down'
-	elif userinput[pygame.K_a]:
+	elif userinput[pygame.K_a] or userinput[pygame.K_LEFT]:
 		return 'left'
-	elif userinput[pygame.K_d]:
+	elif userinput[pygame.K_d] or userinput[pygame.K_RIGHT]:
 		return 'right'
 	return 'none'
 
