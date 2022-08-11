@@ -2,6 +2,7 @@ import pygame
 import random
 import time
 import math
+import colorsys
 def main():
 	background_colour = (255, 0, 0)
 	screen = pygame.display.set_mode((995, 995))
@@ -53,20 +54,51 @@ class Snake:
 		self.turning_forgivingness = 0
 		self.snake_body = [self.snake_head]
 		self.buffer = 55
+		self.direction_x = bool
+		self.direction_y = bool
 
 	def draw_snake(self):
 		pygame.draw.rect(self.screen, (255, 255, 255), self.snake_head)
 		pygame.draw.rect(self.screen, (255, 0, 0), self.food)
 
 		for i in range(len(self.snake_body)-1, 0, -1):
-			if (abs(self.snake_body[i].x - self.snake_body[i - 1].x) >= 50 or abs(self.snake_body[i].y - self.snake_body[i - 1].y) >= 50):
-				self.snake_body[i].x = self.snake_body[i - 1].x
-				self.snake_body[i].y = self.snake_body[i - 1].y
-				print("head: ",self.snake_body[i].x, ":", self.snake_body[i].y)
-				print("tail: ", self.snake_body[i - 1].x, ":", self.snake_body[i - 1].y)
+			#print("difference x:", self.snake_body[i].x - self.snake_body[i-1].x)
+			#print("difference y:", self.snake_body[i].y - self.snake_body[i-1].y)
+			# print("direction x", self.snake_body[len(self.snake_body) - 1].x - self.snake_body[len(self.snake_body) - 2].x)
+			# print("direction y", self.snake_body[len(self.snake_body) - 1].y - self.snake_body[len(self.snake_body) - 2].y)
+			cnst = 55
+			if (self.snake_body[len(self.snake_body) - 1].x - self.snake_body[len(self.snake_body) - 2].x > 0):
+				self.direction_x = True
+			if (self.snake_body[len(self.snake_body) - 1].x - self.snake_body[len(self.snake_body) - 2].x < 0):
+				self.direction_x = False
+			if (self.snake_body[len(self.snake_body) - 1].y - self.snake_body[len(self.snake_body) - 2].y > 0):
+				self.direction_y = True
+			if (self.snake_body[len(self.snake_body) - 1].y - self.snake_body[len(self.snake_body) - 2].y < 0) :
+				self.direction_y = False
 
+
+
+			if (self.direction_x is True):
+				self.snake_body[i].x = self.snake_body[i - 1].x + cnst
+				self.snake_body[i].y = self.snake_body[i - 1].y
+			if (self.direction_x is False):
+				self.snake_body[i].x = self.snake_body[i - 1].x + cnst
+				self.snake_body[i].y = self.snake_body[i - 1].y
+			if (self.direction_y is True):
+				self.snake_body[i].y = self.snake_body[i - 1].y + cnst
+				self.snake_body[i].x = self.snake_body[i - 1].x
+			if (self.direction_y is False):
+				self.snake_body[i].y = self.snake_body[i - 1].y + cnst
+				self.snake_body[i].x = self.snake_body[i - 1].x 
+
+		x = 0
 		for bodys in self.snake_body:
-			pygame.draw.rect(self.screen, (255, 255, 255), bodys)
+			x += 0.1
+			if x > 1:
+				x = 0
+			hls_color = colorsys.hls_to_rgb(x, 0.45, 1)
+			rgb = (hls_color[0]*255 , hls_color[1]*255, hls_color[2]*255)
+			pygame.draw.rect(self.screen, rgb, bodys)
 
 	def increase(self):
 		self.snake_body.append(pygame.Rect(self.snake_head.x, self.snake_head.y, self.thickness, self.thickness))
