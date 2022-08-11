@@ -1,6 +1,7 @@
 import pygame
 import random
 import time
+import math
 def main():
 	background_colour = (255, 0, 0)
 	screen = pygame.display.set_mode((995, 995))
@@ -49,14 +50,21 @@ class Snake:
 		self.x_velocity = 0
 		self.y_velocity = 0
 		self.speed = 10
-		self.turning_forgivingness = 1
+		self.turning_forgivingness = 0
 		self.snake_body = [self.snake_head]
+		self.buffer = 55
 
 	def draw_snake(self):
 		pygame.draw.rect(self.screen, (255, 255, 255), self.snake_head)
 		pygame.draw.rect(self.screen, (255, 0, 0), self.food)
 
-		#
+		for i in range(len(self.snake_body)-1, 0, -1):
+			if (abs(self.snake_body[i].x - self.snake_body[i - 1].x) >= 50 or abs(self.snake_body[i].y - self.snake_body[i - 1].y) >= 50):
+				self.snake_body[i].x = self.snake_body[i - 1].x
+				self.snake_body[i].y = self.snake_body[i - 1].y
+				print("head: ",self.snake_body[i].x, ":", self.snake_body[i].y)
+				print("tail: ", self.snake_body[i - 1].x, ":", self.snake_body[i - 1].y)
+
 		for bodys in self.snake_body:
 			pygame.draw.rect(self.screen, (255, 255, 255), bodys)
 
@@ -82,28 +90,28 @@ class Snake:
 		if self.buffered_direction != self.moving_direction:
 			if self.buffered_direction == 'up':
 				distance_to_turn = (round((self.snake_head.x - self.boarder_thickness) / self.distance_between_squares) * self.distance_between_squares) - (self.snake_head.x - self.boarder_thickness)
-				if distance_to_turn < self.turning_forgivingness:
+				if distance_to_turn <= self.turning_forgivingness:
 					self.snake_head.x += distance_to_turn
 					self.moving_direction = 'up'
 					self.y_velocity = -self.speed
 					self.x_velocity = 0
 			elif self.buffered_direction == 'down':
 				distance_to_turn = (round((self.snake_head.x - self.boarder_thickness) / self.distance_between_squares) * self.distance_between_squares) - (self.snake_head.x - self.boarder_thickness)
-				if distance_to_turn < self.turning_forgivingness:
+				if distance_to_turn <= self.turning_forgivingness:
 					self.snake_head.x += distance_to_turn
 					self.moving_direction = 'down'
 					self.y_velocity = self.speed
 					self.x_velocity = 0
 			elif self.buffered_direction == 'left':
 				distance_to_turn = (round((self.snake_head.y - self.boarder_thickness) / self.distance_between_squares) * self.distance_between_squares) - (self.snake_head.y - self.boarder_thickness)
-				if distance_to_turn < self.turning_forgivingness:
+				if distance_to_turn <= self.turning_forgivingness:
 					self.snake_head.y += distance_to_turn
 					self.moving_direction = 'left'
 					self.x_velocity = -self.speed
 					self.y_velocity = 0
 			elif self.buffered_direction == 'right':
 				distance_to_turn = (round((self.snake_head.y - self.boarder_thickness) / self.distance_between_squares) * self.distance_between_squares) - (self.snake_head.y - self.boarder_thickness)
-				if distance_to_turn < self.turning_forgivingness:
+				if distance_to_turn <= self.turning_forgivingness:
 					self.snake_head.y += distance_to_turn
 					self.moving_direction = 'right'
 					self.x_velocity = self.speed
