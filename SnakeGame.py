@@ -11,6 +11,7 @@ def main():
 	y_pos = 500
 
 	snakey = Snake(screen, x_pos, y_pos)
+	snakey.spawn_food()
 	running = True
 	while running:
 		for event in pygame.event.get():
@@ -25,6 +26,8 @@ def main():
 			snakey.change_direction(userinput)
 		snakey.move_snake()
 		snakey.draw_snake()
+		snakey.food_collision()
+
 		
 
 
@@ -37,6 +40,7 @@ class Snake:
 	def __init__(self, screen, x, y):
 		self.screen = screen
 		self.thickness = 50
+		self.food = pygame.Rect(0, 0, self.thickness, self.thickness)
 		self.boarder_thickness = 5
 		self.distance_between_squares = self.thickness + self.boarder_thickness
 		self.snake_head = pygame.Rect(x, y, self.thickness, self.thickness)
@@ -45,21 +49,34 @@ class Snake:
 		self.x_velocity = 0
 		self.y_velocity = 0
 		self.speed = 10
-		self.turning_forgivingness = self.speed + 1
-	def draw_snake(self,):
-		pygame.draw.rect(self.screen, (255, 255, 255), self.snake_head)
-	def increase(length):
-		#if snake eat food:
-		   #then increase length by 1
-		pass
-	def collision():
-		#if snake hits out of bounds or snake hits itself:
-			#game over
-		pass
-	def Food(x_pos ,y_pos):
+		self.turning_forgivingness = 1
+		self.snake_body = [self.snake_head]
 
-		food = pygame.Rect(x_pos, y_pos, 50, 50)
-		pygame.draw.rect(self.screen, (255, 0, 0), food)
+	def draw_snake(self):
+		pygame.draw.rect(self.screen, (255, 255, 255), self.snake_head)
+		pygame.draw.rect(self.screen, (255, 0, 0), self.food)
+
+		#
+		for bodys in self.snake_body:
+			pygame.draw.rect(self.screen, (255, 255, 255), bodys)
+
+	def increase(self):
+		self.snake_body.append(pygame.Rect(self.snake_head.x, self.snake_head.y, self.thickness, self.thickness))
+
+	def food_collision(self):
+		if (self.food.colliderect(self.snake_head)):
+			self.increase()
+			self.spawn_food()
+
+
+	def spawn_food(self):
+		x_pos = random.randrange(5, 995, 55)
+		y_pos = random.randrange(5, 995, 55)
+		self.food.x = x_pos
+		self.food.y = y_pos
+		if (self.food.colliderect(self.snake_head)):
+			self.spawn_food()
+
 
 	def move_snake(self):
 		if self.buffered_direction != self.moving_direction:
