@@ -4,13 +4,15 @@ import colorsys
 
 
 def main():
+	pygame.init()
 	screen = pygame.display.set_mode((995, 995))
 	pygame.display.set_caption('Snake!')
 	pygame.display.flip()
 	background_image = pygame.image.load('995 grid.png').convert()
+	snake_death_sound = pygame.mixer.Sound("snakedie.mp3")
+	snake_death_sound.set_volume(0.4)
 
 	snakey = Snake(screen, 500, 500)
-	snakey.spawn_food()
 	running = True
 	while running:
 		for event in pygame.event.get():
@@ -31,15 +33,10 @@ def main():
 		snakey.move_snake()
 		snakey.draw_snake()
 		snakey.face()
-		snakey.endgame()
-		if snakey.endgame() is True:
-			pygame.mixer.init()
-			pygame.mixer.music.load("snakedie.mp3")
-			pygame.mixer.music.set_volume(0.01)
-			pygame.mixer.music.play(0)
-			running = False
-			main()
-
+		dead_snake = snakey.endgame()
+		if dead_snake is True:
+			snake_death_sound.play()
+			snakey = Snake(screen, 500, 500)
 		snakey.food_collision()
 		pygame.time.Clock().tick(10)
 		pygame.display.flip()
@@ -63,7 +60,8 @@ class Snake:
 		self.snake_body = [self.snake_head]
 		self.buffer = 55
 		self.coordinates = []
-
+		self.spawn_food()
+		self.apple_sprite = pygame.image.load("apple.png").convert_alpha()
 
 	def face(self):
 		pygame.draw.circle(self.screen, (0, 0, 0), [self.snake_head.x + 11, self.snake_head.y + 11], 7)
@@ -71,11 +69,11 @@ class Snake:
 
 	def draw_snake(self):
 		pygame.draw.rect(self.screen, (255, 255, 255), self.snake_head)
-		Apple = pygame.image.load("apple.png").convert()
-		rect = Apple.get_rect()
-		rect.center = (self.food.x , self.food.y)
-		self.screen.blit(Apple, rect)
-		pygame.draw.rect(self.screen, (0, 0, 255), self.food)
+		# Apple = pygame.image.load("apple.png").convert_alpha()
+		# rect = Apple.get_rect()
+		# rect.center = (self.food.x , self.food.y)
+		self.screen.blit(self.apple_sprite, self.food)
+		# pygame.draw.rect(self.screen, (0, 0, 255), self.food)
 
 		x = 0
 		for bodys in self.snake_body:
