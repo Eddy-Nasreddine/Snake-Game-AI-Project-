@@ -30,6 +30,7 @@ def main():
 		snakey.update_body()
 		snakey.move_snake()
 		snakey.draw_snake()
+		snakey.face()
 		snakey.endgame()
 		if snakey.endgame() is True:
 			pygame.mixer.init()
@@ -63,9 +64,19 @@ class Snake:
 		self.buffer = 55
 		self.coordinates = []
 
+
+	def face(self):
+		pygame.draw.circle(self.screen, (0, 0, 0), [self.snake_head.x + 11, self.snake_head.y + 11], 7)
+		pygame.draw.circle(self.screen, (0, 0, 0), [self.snake_head.x + 39, self.snake_head.y + 11], 7)
+
 	def draw_snake(self):
 		pygame.draw.rect(self.screen, (255, 255, 255), self.snake_head)
+		Apple = pygame.image.load("apple.png").convert()
+		rect = Apple.get_rect()
+		rect.center = (self.food.x , self.food.y)
+		self.screen.blit(Apple, rect)
 		pygame.draw.rect(self.screen, (0, 0, 255), self.food)
+
 		x = 0
 		for bodys in self.snake_body:
 			x += 0.01
@@ -107,7 +118,6 @@ class Snake:
 		for bodys in self.snake_body:
 			if self.food.colliderect(bodys):
 				self.spawn_food()
-
 
 	def move_snake(self):
 		if self.buffered_direction != self.moving_direction:
