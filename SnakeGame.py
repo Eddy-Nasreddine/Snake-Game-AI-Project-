@@ -104,6 +104,10 @@ class Snake:
 		self.food.y = y_pos
 		if self.food.colliderect(self.snake_head):
 			self.spawn_food()
+		for bodys in self.snake_body:
+			if self.food.colliderect(bodys):
+				self.spawn_food()
+
 
 	def move_snake(self):
 		if self.buffered_direction != self.moving_direction:
