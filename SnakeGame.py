@@ -10,7 +10,7 @@ def main():
 	pygame.display.flip()
 	background_image = pygame.image.load('995 grid.png').convert()
 	snake_death_sound = pygame.mixer.Sound("snakedie.mp3")
-	snake_death_sound.set_volume(0.4)
+	snake_death_sound.set_volume(0.1)
 
 	snakey = Snake(screen, 500, 500)
 	running = True
@@ -60,7 +60,10 @@ class Snake:
 		self.snake_body = [self.snake_head]
 		self.buffer = 55
 		self.coordinates = []
-		self.spawn_food()
+		self.amount = 1
+		self.food_list = []
+		for i in range(self.amount):
+			self.spawn_food()
 		self.apple_sprite = pygame.image.load("apple.png").convert_alpha()
 
 	def face(self):
@@ -69,12 +72,8 @@ class Snake:
 
 	def draw_snake(self):
 		pygame.draw.rect(self.screen, (255, 255, 255), self.snake_head)
-		# Apple = pygame.image.load("apple.png").convert_alpha()
-		# rect = Apple.get_rect()
-		# rect.center = (self.food.x , self.food.y)
-		self.screen.blit(self.apple_sprite, self.food)
-		# pygame.draw.rect(self.screen, (0, 0, 255), self.food)
-
+		for foods in self.food_list:
+			self.screen.blit(self.apple_sprite, foods)
 		x = 0
 		for bodys in self.snake_body:
 			x += 0.01
@@ -93,9 +92,11 @@ class Snake:
 		self.snake_body.append(pygame.Rect(self.snake_head.x, self.snake_head.y, self.thickness, self.thickness))
 
 	def food_collision(self):
-		if self.food.colliderect(self.snake_head):
-			self.increase()
-			self.spawn_food()
+		for foods in self.food_list:
+			if foods.colliderect(self.snake_head):
+				self.increase()
+				self.spawn_food()
+				self.food_list.remove(foods)
 
 	def endgame(self):
 		for j in range(1, len(self.snake_body)):
@@ -107,15 +108,18 @@ class Snake:
 			return True
 
 	def spawn_food(self):
-		x_pos = random.randrange(5, 995, 55)
-		y_pos = random.randrange(5, 995, 55)
-		self.food.x = x_pos
-		self.food.y = y_pos
+		food = pygame.Rect(0, 0, self.thickness, self.thickness)
+		food.x = random.randrange(5, 995, 55)
+		food.y = random.randrange(5, 995, 55)
+		for foods in self.food_list:
+			if self.food.colliderect(foods):
+				return self.spawn_food()
 		if self.food.colliderect(self.snake_head):
-			self.spawn_food()
+			return self.spawn_food()
 		for bodys in self.snake_body:
 			if self.food.colliderect(bodys):
-				self.spawn_food()
+				return self.spawn_food()
+		self.food_list.append(food)
 
 	def move_snake(self):
 		if self.buffered_direction != self.moving_direction:
