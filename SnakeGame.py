@@ -1,7 +1,10 @@
 import pygame
 import random
 import colorsys
+from collections import namedtuple
 
+
+coordinate = namedtuple("point", "x, y")
 
 def main():
 	pygame.init()
@@ -60,10 +63,7 @@ class Snake:
 		self.snake_body = [self.snake_head]
 		self.buffer = 55
 		self.coordinates = []
-		self.amount = 1
-		self.food_list = []
-		for i in range(self.amount):
-			self.spawn_food()
+		self.spawn_food()
 		self.apple_sprite = pygame.image.load("apple.png").convert_alpha()
 
 	def face(self):
@@ -72,8 +72,7 @@ class Snake:
 
 	def draw_snake(self):
 		pygame.draw.rect(self.screen, (255, 255, 255), self.snake_head)
-		for foods in self.food_list:
-			self.screen.blit(self.apple_sprite, foods)
+		self.screen.blit(self.apple_sprite, self.food)
 		x = 0
 		for bodys in self.snake_body:
 			x += 0.01
@@ -92,11 +91,9 @@ class Snake:
 		self.snake_body.append(pygame.Rect(self.snake_head.x, self.snake_head.y, self.thickness, self.thickness))
 
 	def food_collision(self):
-		for foods in self.food_list:
-			if foods.colliderect(self.snake_head):
-				self.increase()
-				self.spawn_food()
-				self.food_list.remove(foods)
+		if self.food.colliderect(self.snake_head):
+			self.increase()
+			self.spawn_food()
 
 	def endgame(self):
 		for j in range(1, len(self.snake_body)):
@@ -108,65 +105,36 @@ class Snake:
 			return True
 
 	def spawn_food(self):
-		food = pygame.Rect(0, 0, self.thickness, self.thickness)
-		food.x = random.randrange(5, 995, 55)
-		food.y = random.randrange(5, 995, 55)
-		for foods in self.food_list:
-			if self.food.colliderect(foods):
-				return self.spawn_food()
+		self.food = pygame.Rect(0, 0, self.thickness, self.thickness)
+		self.food.x = random.randrange(5, 995, 55)
+		self.food.y = random.randrange(5, 995, 55)
 		if self.food.colliderect(self.snake_head):
-			return self.spawn_food()
+			self.spawn_food()
 		for bodys in self.snake_body:
 			if self.food.colliderect(bodys):
-				return self.spawn_food()
-		self.food_list.append(food)
+				self.spawn_food()
 
 	def move_snake(self):
 		if self.buffered_direction != self.moving_direction:
 			if self.buffered_direction == 'up':
-				distance_to_turn = (round((self.snake_head.x - self.boarder_thickness) / self.distance_between_squares) * self.distance_between_squares) - (self.snake_head.x - self.boarder_thickness)
-				if abs(distance_to_turn) <= self.turning_forgivingness:
-					self.snake_head.x += distance_to_turn
-					self.moving_direction = 'up'
-					self.y_velocity = -self.speed
-					self.x_velocity = 0
+				self.moving_direction = 'up'
+				self.y_velocity = -self.speed
+				self.x_velocity = 0
 			elif self.buffered_direction == 'down':
-				distance_to_turn = (round((self.snake_head.x - self.boarder_thickness) / self.distance_between_squares) * self.distance_between_squares) - (self.snake_head.x - self.boarder_thickness)
-				if abs(distance_to_turn) <= self.turning_forgivingness:
-					self.snake_head.x += distance_to_turn
-					self.moving_direction = 'down'
-					self.y_velocity = self.speed
-					self.x_velocity = 0
+				self.moving_direction = 'down'
+				self.y_velocity = self.speed
+				self.x_velocity = 0
 			elif self.buffered_direction == 'left':
-				distance_to_turn = (round((self.snake_head.y - self.boarder_thickness) / self.distance_between_squares) * self.distance_between_squares) - (self.snake_head.y - self.boarder_thickness)
-				if abs(distance_to_turn) <= self.turning_forgivingness:
-					self.snake_head.y += distance_to_turn
-					self.moving_direction = 'left'
-					self.x_velocity = -self.speed
-					self.y_velocity = 0
+				self.moving_direction = 'left'
+				self.x_velocity = -self.speed
+				self.y_velocity = 0
 			elif self.buffered_direction == 'right':
-				distance_to_turn = (round((self.snake_head.y - self.boarder_thickness) / self.distance_between_squares) * self.distance_between_squares) - (self.snake_head.y - self.boarder_thickness)
-				if abs(distance_to_turn) <= self.turning_forgivingness:
-					self.snake_head.y += distance_to_turn
-					self.moving_direction = 'right'
-					self.x_velocity = self.speed
-					self.y_velocity = 0
+				self.moving_direction = 'right'
+				self.x_velocity = self.speed
+				self.y_velocity = 0
 
 		self.snake_head.x += self.x_velocity
 		self.snake_head.y += self.y_velocity
-		# else:
-		# 	if self.moving_direction == 'up':
-		# 		y_velocity = -55
-		# 		x_velocity = 0
-		# 	elif self.moving_direction == 'down':
-		# 		y_velocity = 55
-		# 		x_velocity = 0
-		# 	elif self.moving_direction == 'left':
-		# 		x_velocity = -55
-		# 		y_velocity = 0
-		# 	elif self.moving_direction == 'right':
-		# 		x_velocity = 55
-		# 		y_velocity = 0
 
 	def change_direction(self, direction):
 		if len(self.snake_body) > 1:
